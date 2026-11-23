@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#f5efe6">
+  <title>Einladung zur Hochzeit</title>
+  <meta property="og:title" content="Einladung zur Hochzeit">
+  <meta property="og:description" content="Ihr seid eingeladen – öffnet den Umschlag.">
+  <link rel="preload" href="fonts/cormorant-garamond-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/pinyon-script-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/config.js"></script>
+  <script>
+    // Animation nur, wenn JS läuft und keine reduzierte Bewegung gewünscht ist
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('anim');
+  </script>
+</head>
+<body>
+  <a class="skip" href="#rsvp">Direkt zur Antwort</a>
+
+  <main id="scroller">
+    <div class="stage" id="stage">
+
+      <!-- ============ UMSCHLAG ============ -->
+      <div class="env-part env-shadow" aria-hidden="true"></div>
+      <div class="env-part env-back" aria-hidden="true"><div class="liner"></div></div>
+
+      <div class="env-part env-flap" aria-hidden="true">
+        <div class="flap-face flap-out"></div>
+        <div class="flap-face flap-in"><div class="liner"></div></div>
+      </div>
+
+      <div class="env-part env-pocket" aria-hidden="true">
+        <svg viewBox="0 0 142 100" preserveAspectRatio="none">
+          <polygon class="p-left"   points="0,0 71,54 0,100"/>
+          <polygon class="p-right"  points="142,0 71,54 142,100"/>
+          <polygon class="p-bottom" points="0,100 71,46 142,100"/>
+        </svg>
+      </div>
+
+      <div class="env-part seal" aria-hidden="true"><span data-bind="monogram"></span></div>
+
+      <!-- ============ KARTE / BROSCHÜRE ============ -->
+      <div class="book" id="book">
+
+        <!-- Rückseite: Formular -->
+        <section class="page base" id="rsvp" aria-labelledby="rsvp-title">
+          <div class="paper form-page">
+            <div class="form-wrap">
+              <p class="eyebrow">Antwort</p>
+              <h2 id="rsvp-title" class="title">Seid ihr dabei?</h2>
+              <p class="sub">Bitte gebt uns bis zum <span data-bind="rsvpDeadline"></span> Bescheid.</p>
+
+              <form id="rsvp-form" novalidate>
+                <input type="hidden" name="access_key" value="">
+                <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+                <div class="choice" role="radiogroup" aria-label="Zusage oder Absage">
+                  <label class="pill"><input type="radio" name="antwort" value="Zusage" required><span>Wir kommen gern</span></label>
+                  <label class="pill"><input type="radio" name="antwort" value="Absage"><span>Leider nicht</span></label>
+                </div>
+
+                <label class="field">
+                  <span>Name(n)</span>
+                  <input name="name" type="text" autocomplete="name" placeholder="z. B. Lisa & Tom Müller" required>
+                </label>
+
+                <label class="field">
+                  <span>E-Mail</span>
+                  <input name="email" type="email" autocomplete="email" inputmode="email" placeholder="für Rückfragen" required>
+                </label>
+
+                <div class="yes-only">
+                  <label class="field">
+                    <span>Personen</span>
+                    <select name="personen" id="guests"></select>
+                  </label>
+                  <label class="field">
+                    <span>Allergien / Essenswünsche</span>
+                    <input name="essen" type="text" placeholder="optional">
+                  </label>
+                </div>
+
+                <label class="field">
+                  <span>Nachricht an das Paar</span>
+                  <textarea name="nachricht" rows="2" placeholder="optional"></textarea>
+                </label>
+
+                <button class="send" type="submit"><span class="label">Antwort senden</span><span class="spinner" aria-hidden="true"></span></button>
+                <p class="status" role="status" aria-live="polite"></p>
+                <p class="privacy">Eure Angaben werden nur per E-Mail an das Brautpaar geschickt (über Web3Forms) und für nichts anderes verwendet.</p>
+              </form>
+
+              <div class="thanks" hidden>
+                <svg class="check" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24"/><path d="M15 27l7 7 15-16"/></svg>
+                <h3 class="title" id="thanks-title">Danke!</h3>
+                <p class="sub" id="thanks-text"></p>
+                <button type="button" class="link-btn" id="again">Noch eine Antwort senden</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Blatt 3: Ablauf -->
+        <section class="leaf" data-leaf="3" aria-label="Ablauf">
+          <div class="face front paper">
+            <div class="inner">
+              <p class="eyebrow">Der Tag</p>
+              <h2 class="title">Ablauf</h2>
+              <ol class="schedule" id="schedule"></ol>
+              <div class="venue">
+                <p class="eyebrow">Ort</p>
+                <p class="venue-name" data-bind="venueName"></p>
+                <p class="venue-addr" data-bind="venueAddress"></p>
+                <div class="actions">
+                  <a class="chip" id="maps" target="_blank" rel="noopener">Route planen</a>
+                  <button class="chip" type="button" id="ics">In Kalender eintragen</button>
+                </div>
+              </div>
+              <p class="dress"><span class="eyebrow">Dresscode</span><br><span data-bind="dresscode"></span></p>
+            </div>
+            <div class="shade"></div>
+          </div>
+          <div class="face back paper photo-face">
+            <img alt="" data-src="back3">
+            <p class="script caption">Wir freuen uns auf euch</p>
+            <div class="shade"></div>
+          </div>
+        </section>
+
+        <!-- Blatt 2: Einladung -->
+        <section class="leaf" data-leaf="2" aria-label="Einladung">
+          <div class="face front paper">
+            <div class="inner center">
+              <p class="eyebrow">Wir heiraten</p>
+              <h2 class="title big" data-bind="headline"></h2>
+              <p class="names"><span data-bind="partner1"></span> <em>&amp;</em> <span data-bind="partner2"></span></p>
+              <p class="story" data-bind="story"></p>
+              <div class="rule"></div>
+              <p class="when" data-bind="dateLong"></p>
+              <p class="where"><span data-bind="venueName"></span>, <span data-bind="place"></span></p>
+            </div>
+            <div class="shade"></div>
+          </div>
+          <div class="face back paper quote-face">
+            <p class="script quote" data-bind="quote"></p>
+            <div class="shade"></div>
+          </div>
+        </section>
+
+        <!-- Blatt 1: Titelseite -->
+        <section class="leaf" data-leaf="1" aria-label="Titelseite">
+          <div class="face front paper cover">
+            <p class="script cover-title">Save the date</p>
+            <div class="booth">
+              <img alt="" data-src="cover0"><img alt="" data-src="cover1">
+              <img alt="" data-src="cover2"><img alt="" data-src="cover3">
+            </div>
+            <div class="cover-foot"><span data-bind="dateShort"></span><span data-bind="place"></span></div>
+            <div class="shade"></div>
+          </div>
+          <div class="face back paper photo-face">
+            <img alt="" data-src="back1">
+            <p class="script caption"><span data-bind="partner1"></span> &amp; <span data-bind="partner2"></span></p>
+            <div class="shade"></div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Hinweis & Navigation -->
+      <div class="hint" aria-hidden="true"><span>Scrollen zum Öffnen</span><i></i></div>
+      <nav class="dots" aria-label="Kapitel">
+        <button data-go="cover"   aria-label="Titelseite"></button>
+        <button data-go="invite"  aria-label="Einladung"></button>
+        <button data-go="details" aria-label="Ablauf"></button>
+        <button data-go="rsvp"    aria-label="Antwort"></button>
+      </nav>
+    </div>
+  </main>
+
+  <noscript><p class="noscript">Bitte JavaScript aktivieren, um die Einladung zu sehen.</p></noscript>
+
+  <script src="vendor/gsap.min.js"></script>
+  <script src="vendor/ScrollTrigger.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
