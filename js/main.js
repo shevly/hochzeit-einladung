@@ -13,7 +13,11 @@
     const src = k.startsWith("cover") ? (P.cover || [])[+k.slice(5)] : P[k];
     if (src) { img.decoding = "async"; img.src = src; }
   });
-  if (C.partner1) document.title = `${C.partner1} & ${C.partner2} – Einladung zur Hochzeit`;
+
+  /* ================= SPÄTER WIEDER EINBLENDEN =================
+     Ablauf, Kalender-Export und Antwortformular (Web3Forms).
+     Zum Aktivieren diesen Kommentar entfernen (und in index.html den
+     SPÄTER-Kommentar um die Seiten).
 
   const ol = $("#schedule");
   (C.schedule || []).forEach((s) => {
@@ -44,7 +48,7 @@
     setTimeout(() => URL.revokeObjectURL(a.href), 2000);
   });
 
-  /* ---------------- Formular ---------------- */
+  // ---------------- Formular ----------------
   const form = $("#rsvp-form");
   const F = form.elements;
   const guests = $("#guests");
@@ -107,6 +111,7 @@
     } finally { btn.classList.remove("busy"); btn.disabled = false; }
   });
   $("#again").addEventListener("click", () => { form.reset(); form.hidden = false; thanks.hidden = true; });
+  ================= ENDE SPÄTER ================= */
 
   /* ---------------- Scroll-Animation ---------------- */
   if (!document.documentElement.classList.contains("anim") || !window.gsap || !window.ScrollTrigger) {
@@ -119,31 +124,37 @@
 
   const root = document.documentElement;
   const stage = $("#stage"), scroller = $("#scroller"), book = $("#book");
-  const leaves = [1, 2, 3].map((n) => $(`.leaf[data-leaf="${n}"]`)); // oben → unten
   const envParts = $$(".env-part");
+  const CARD_RATIO = 1241 / 1748; // Seitenverhältnis der Save-the-date-Karte
+  /* SPÄTER (weitere Seiten):
+  const leaves = [1, 2, 3].map((n) => $(`.leaf[data-leaf="${n}"]`)); // oben → unten
   const dots = $$(".dots button");
   const chapters = ["cover", "invite", "details", "rsvp"];
   const visibleFace = { cover: leaves[0].querySelector(".front"), invite: leaves[1].querySelector(".front"), details: leaves[2].querySelector(".front"), rsvp: $(".base") };
-  let tl, current = null, T = {};
+  let current = null;
+  */
+  let tl, T = {};
 
   function measure() {
     const vw = stage.clientWidth, vh = stage.clientHeight;
     const spread = vw >= 900 && vw / vh > 1.05;
-    let pw, ph;
-    if (spread) {
-      ph = Math.min(vh - 120, 800);
-      pw = Math.min(ph * 0.7, (vw - 120) / 2);
-      ph = Math.min(ph, pw / 0.62);
-    } else {
-      pw = Math.min(vw - 28, 460);
-      ph = Math.min(vh - 96, pw * 1.62);
-    }
-    const ew = Math.min(vw * 0.88, 640, (vh - 170) * 1.42);
+    // Karte: so groß wie möglich, im Seitenverhältnis des Bildes
+    let ph = Math.min(vh - (spread ? 70 : 56), 1000);
+    let pw = ph * CARD_RATIO;
+    if (pw > vw - 32) { pw = vw - 32; ph = pw / CARD_RATIO; }
+    /* SPÄTER (Doppelseiten-Layout für die Broschüre):
+    if (spread) { ph = Math.min(vh - 120, 800); pw = Math.min(ph * 0.7, (vw - 120) / 2); ph = Math.min(ph, pw / 0.62); }
+    else { pw = Math.min(vw - 28, 460); ph = Math.min(vh - 96, pw * 1.62); }
+    */
+    // Umschlag: Platz für die Frage darüber lassen
+    const askH = Math.min(Math.max(vw * 0.046, 26), 52) * 2.4 + 40;
+    const ew = Math.min(vw * 0.88, 640, (vh - askH - 120) * 1.42);
     const eh = ew / 1.42;
+    const envY = Math.min(askH / 2, vh / 2 - eh / 2 - 24);
     const s = Math.min((ew * 0.9) / ph, (eh * 0.84) / pw);
     // Umschlag beim Herausziehen etwas nach unten, damit die Karte im Bild bleibt
-    const lift = Math.max(0, Math.min(eh / 2 + pw * s + 14 - vh / 2 + 28, vh / 2 - eh / 2 - 12));
-    return { vw, vh, spread, pw, ph, ew, eh, s, lift, cardY: spread ? -6 : -24 };
+    const lift = Math.max(envY, Math.min(eh / 2 + pw * s + 14 - vh / 2 + 28, vh / 2 - eh / 2 - 12));
+    return { vw, vh, spread, pw, ph, ew, eh, s, envY, lift, cardY: 0 };
   }
 
   function build() {
@@ -152,36 +163,45 @@
     const d = measure();
     root.style.setProperty("--pw", d.pw + "px"); root.style.setProperty("--ph", d.ph + "px");
     root.style.setProperty("--ew", d.ew + "px"); root.style.setProperty("--eh", d.eh + "px");
+    root.style.setProperty("--envY", d.envY + "px");
 
     // Zeitpunkte (Einheiten der Timeline)
-    T = { open: 0.25, slide: 1.15, out: 2.2, cover: 3.6, flip1: 3.8, invite: 5.0, flip2: 5.2, details: 6.4, flip3: 6.6, rsvp: 7.8 };
-    scroller.style.height = Math.round(d.vh + T.rsvp * d.vh * 0.78) + "px";
+    T = { open: 0.35, slide: 1.25, out: 2.3, cover: 3.7 };
+    /* SPÄTER: T = { ...T, flip1: 3.9, invite: 5.1, flip2: 5.3, details: 6.5, flip3: 6.7, rsvp: 7.9 }; */
+    const END = T.cover;
+    scroller.style.height = Math.round(d.vh + END * d.vh * 0.78) + "px";
 
     // Ausgangszustand
     gsap.set(envParts, { clearProps: "transform,opacity,visibility" });
+    gsap.set(envParts, { y: d.envY });
+    gsap.set(".ask", { autoAlpha: 1, y: 0 });
     gsap.set(".env-shadow", { zIndex: 0 }); gsap.set(".env-back", { zIndex: 1 }); gsap.set(".env-pocket", { zIndex: 4 });
     gsap.set(".env-flap", { rotationX: 0, transformPerspective: 1600, transformOrigin: "50% 0%", zIndex: 5 });
     gsap.set(".seal", { scale: 1, autoAlpha: 1, zIndex: 6 });
-    gsap.set(book, { x: 0, y: d.eh * 0.05, rotation: -90, scale: d.s, zIndex: 3 });
+    gsap.set(book, { x: 0, y: d.envY + d.eh * 0.05, rotation: -90, scale: d.s, zIndex: 3 });
+    gsap.set(".hint", { autoAlpha: 1, y: 0, xPercent: -50 });
+    /* SPÄTER:
     leaves.forEach((l, i) => gsap.set(l, { rotationY: 0, z: 2 * (3 - i), transformOrigin: "0% 50%" }));
     gsap.set($$(".leaf .front .shade"), { opacity: 0 });
     gsap.set($$(".leaf .back .shade"), { opacity: 0.32 });
     gsap.set($$(".leaf .back"), { autoAlpha: 1 });
-    gsap.set(".hint", { autoAlpha: 1, y: 0, xPercent: -50 });
     gsap.set(".dots", { autoAlpha: 0 });
+    */
 
     tl = gsap.timeline({
       defaults: { ease: "none" },
       scrollTrigger: {
         trigger: scroller, start: "top top", end: "bottom bottom",
         scrub: 0.5,
-        snap: /[?&]nosnap/.test(location.search) ? false : { snapTo: "labelsDirectional", duration: { min: 0.25, max: 0.8 }, delay: 0.1, ease: "power2.inOut" },
-        onUpdate: sync
+        snap: /[?&]nosnap/.test(location.search) ? false : { snapTo: "labelsDirectional", duration: { min: 0.3, max: 1.1 }, delay: 0.1, ease: "power2.inOut" }
+        /* SPÄTER: , onUpdate: sync */
       }
     });
 
     tl.addLabel("start", 0)
       .to(".hint", { autoAlpha: 0, y: 12, duration: 0.3 }, 0)
+      // 0. Frage blendet aus
+      .to(".ask", { autoAlpha: 0, y: -30, duration: 0.45, ease: "power1.in" }, 0)
       // 1. Siegel lösen, Lasche öffnen
       .to(".seal", { scale: 1.18, autoAlpha: 0, duration: 0.35, ease: "power1.in" }, 0.05)
       .to(".env-flap", { rotationX: 180, duration: 1, ease: "power1.inOut" }, T.open)
@@ -193,9 +213,11 @@
       // 3. Karte nach vorn, aufrichten, Umschlag fällt weg
       .to(book, { y: d.cardY, rotation: 0, scale: 1, duration: 1.2, ease: "power2.inOut" }, T.out)
       .to(envParts, { y: d.vh * 0.8, autoAlpha: 0, duration: 1.05, ease: "power2.in" }, T.out + 0.05)
-      .to(".dots", { autoAlpha: 1, duration: 0.3 }, T.out + 0.9)
+      /* SPÄTER: .to(".dots", { autoAlpha: 1, duration: 0.3 }, T.out + 0.9) */
+      .to({}, { duration: T.cover - (T.out + 1.2) }, T.out + 1.2) // kurze Ruhephase am Ende
       .addLabel("cover", T.cover);
 
+    /* ================= SPÄTER: 4. Blättern =================
     // 4. Blättern
     [T.flip1, T.flip2, T.flip3].forEach((t, i) => {
       const leaf = leaves[i];
@@ -214,13 +236,15 @@
     });
     tl.to({}, { duration: 0.2 }, T.rsvp - 0.2) // kurze Ruhephase am Ende
       .addLabel("invite", T.invite).addLabel("details", T.details).addLabel("rsvp", T.rsvp);
+    ================= ENDE SPÄTER ================= */
 
     ScrollTrigger.refresh();
     if (p) window.scrollTo(0, tl.scrollTrigger.start + p * (tl.scrollTrigger.end - tl.scrollTrigger.start));
-    current = null; sync();
+    /* SPÄTER: current = null; sync(); */
     window.__invite = { tl, T };
   }
 
+  /* ================= SPÄTER: Kapitel-Navigation =================
   function sync() {
     const t = tl.time();
     const ch = t < T.out + 0.9 ? null : t < T.flip1 + 0.5 ? "cover" : t < T.flip2 + 0.5 ? "invite" : t < T.flip3 + 0.5 ? "details" : "rsvp";
@@ -237,6 +261,7 @@
   };
   dots.forEach((b) => b.addEventListener("click", () => go(b.dataset.go)));
   $(".skip").addEventListener("click", (e) => { e.preventDefault(); go("rsvp", false); setTimeout(() => F["antwort"][0].focus({ preventScroll: true }), 400); });
+  ================= ENDE SPÄTER ================= */
 
   let lastW = 0, lastH = 0, rt;
   const onResize = () => {

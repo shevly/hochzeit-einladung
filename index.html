@@ -5,11 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#f5efe6">
-  <title>Einladung zur Hochzeit</title>
-  <meta property="og:title" content="Einladung zur Hochzeit">
+  <title>Will you celebrate love with us?</title>
+  <meta property="og:title" content="Will you celebrate love with us?">
   <meta property="og:description" content="Ihr seid eingeladen – öffnet den Umschlag.">
   <link rel="preload" href="fonts/cormorant-garamond-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/pinyon-script-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/save-the-date.jpg" as="image">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
   <script src="js/config.js"></script>
@@ -19,26 +20,28 @@
   </script>
 </head>
 <body>
-  <a class="skip" href="#rsvp">Direkt zur Antwort</a>
+  <!-- SPÄTER: <a class="skip" href="#rsvp">Direkt zur Antwort</a> -->
 
   <main id="scroller">
     <div class="stage" id="stage">
 
-      <!-- ============ UMSCHLAG ============ -->
+      <!-- ============ FRAGE ÜBER DEM UMSCHLAG ============ -->
+      <h1 class="ask" data-bind="frage">Will you celebrate love with us?</h1>
+
+      <!-- ============ UMSCHLAG (Papier) ============ -->
       <div class="env-part env-shadow" aria-hidden="true"></div>
-      <div class="env-part env-back" aria-hidden="true"><div class="liner"></div></div>
+      <div class="env-part env-back paper-tex" aria-hidden="true"><div class="liner"></div></div>
 
       <div class="env-part env-flap" aria-hidden="true">
-        <div class="flap-face flap-out"></div>
+        <div class="flap-face flap-out"><div class="flap-shape paper-tex"></div></div>
         <div class="flap-face flap-in"><div class="liner"></div></div>
       </div>
 
       <div class="env-part env-pocket" aria-hidden="true">
-        <svg viewBox="0 0 142 100" preserveAspectRatio="none">
-          <polygon class="p-left"   points="0,0 71,54 0,100"/>
-          <polygon class="p-right"  points="142,0 71,54 142,100"/>
-          <polygon class="p-bottom" points="0,100 71,46 142,100"/>
-        </svg>
+        <div class="pk pk-base paper-tex"></div>
+        <div class="pk pk-left paper-tex"></div>
+        <div class="pk pk-right paper-tex"></div>
+        <div class="pk pk-bottom-wrap"><div class="pk pk-bottom paper-tex"></div></div>
       </div>
 
       <div class="env-part seal" aria-hidden="true"><span data-bind="monogram"></span></div>
@@ -46,7 +49,17 @@
       <!-- ============ KARTE / BROSCHÜRE ============ -->
       <div class="book" id="book">
 
-        <!-- Rückseite: Formular -->
+        <!-- Aktuell: nur die Save-the-date-Karte im Umschlag -->
+        <figure class="card-photo">
+          <img src="assets/save-the-date.jpg" width="1241" height="1748" alt="Save the date – 24.04.2027, Lozorno, SK" decoding="async">
+        </figure>
+
+        <!-- ================= SPÄTER WIEDER EINBLENDEN =================
+             Weitere Seiten (Einladung, Ablauf) und das Antwortformular.
+             Zum Aktivieren: diesen Kommentar entfernen und in js/main.js
+             SEITEN_AKTIV auf true setzen.
+
+        [Rückseite: Formular]
         <section class="page base" id="rsvp" aria-labelledby="rsvp-title">
           <div class="paper form-page">
             <div class="form-wrap">
@@ -104,7 +117,7 @@
           </div>
         </section>
 
-        <!-- Blatt 3: Ablauf -->
+        [Blatt 3: Ablauf]
         <section class="leaf" data-leaf="3" aria-label="Ablauf">
           <div class="face front paper">
             <div class="inner">
@@ -131,7 +144,7 @@
           </div>
         </section>
 
-        <!-- Blatt 2: Einladung -->
+        [Blatt 2: Einladung]
         <section class="leaf" data-leaf="2" aria-label="Einladung">
           <div class="face front paper">
             <div class="inner center">
@@ -151,7 +164,7 @@
           </div>
         </section>
 
-        <!-- Blatt 1: Titelseite -->
+        [Blatt 1: Titelseite]
         <section class="leaf" data-leaf="1" aria-label="Titelseite">
           <div class="face front paper cover">
             <p class="script cover-title">Save the date</p>
@@ -168,16 +181,20 @@
             <div class="shade"></div>
           </div>
         </section>
+        ================= ENDE SPÄTER ================= -->
       </div>
 
-      <!-- Hinweis & Navigation -->
-      <div class="hint" aria-hidden="true"><span>Scrollen zum Öffnen</span><i></i></div>
+      <!-- Hinweis -->
+      <div class="hint" aria-hidden="true"><span>Scroll</span><i></i></div>
+
+      <!-- SPÄTER: Kapitel-Navigation
       <nav class="dots" aria-label="Kapitel">
         <button data-go="cover"   aria-label="Titelseite"></button>
         <button data-go="invite"  aria-label="Einladung"></button>
         <button data-go="details" aria-label="Ablauf"></button>
         <button data-go="rsvp"    aria-label="Antwort"></button>
       </nav>
+      -->
     </div>
   </main>
 

@@ -1,19 +1,22 @@
 /* ==========================================================================
    HIER ALLES ANPASSEN – Texte, Datum, Ort, Fotos, Mail-Schlüssel.
    Nur diese Datei bearbeiten, der Rest der Seite liest von hier.
+   Aktuell sichtbar: frage + monogram. Der Rest wird erst mit den
+   weiteren Seiten (siehe SPÄTER-Kommentare) wieder gebraucht.
    ========================================================================== */
 window.INVITE = {
   // Paar
   partner1: "Sophie",
   partner2: "Jonas",
-  monogram: "S & J",            // steht auf dem Wachssiegel
+  monogram: "E&M",              // steht auf dem Wachssiegel
+  frage: "Will you celebrate love with us?", // steht über dem geschlossenen Umschlag
 
   // Datum & Zeit (ISO für Kalender-Export, Anzeige als Text)
-  dateISO: "2027-09-11T14:00:00",
-  endISO: "2027-09-12T02:00:00",
-  dateLong: "Samstag, 11. September 2027",
-  dateShort: "11.09.2027",
-  place: "Regensburg",        // kurz, für die Titelseite
+  dateISO: "2027-04-24T14:00:00",   // Uhrzeit noch offen
+  endISO: "2027-04-25T02:00:00",
+  dateLong: "Samstag, 24. April 2027",
+  dateShort: "24.04.2027",
+  place: "Lozorno, SK",       // kurz, für die Titelseite
 
   // Ort
   venueName: "Gut Musterhof",

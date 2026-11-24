@@ -3,6 +3,12 @@
 Eine Seite, kein Build-Schritt, keine laufenden Kosten.
 Beim Scrollen öffnet sich der Umschlag, die Karte kommt heraus, man blättert durch und landet auf der Rückseite mit dem Antwortformular.
 
+## Aktueller Stand
+
+Sichtbar ist gerade nur: Frage über dem Umschlag → Umschlag öffnet sich → Save-the-date-Karte (`assets/save-the-date.jpg`).
+Die weiteren Seiten (Einladung, Ablauf) und das Antwortformular sind **nicht gelöscht, sondern auskommentiert** –
+in `index.html` und `js/main.js` mit `SPÄTER` markiert. Zum Aktivieren die Kommentare entfernen.
+
 ## 1. Inhalte anpassen
 
 Alles Inhaltliche steht in **`js/config.js`**: Namen, Datum, Ort, Ablauf, Texte, Antwortfrist, Fotos, Mail-Schlüssel.
@@ -12,7 +18,8 @@ Die Datei mit einem Texteditor öffnen, Werte ändern, speichern. Fertig.
 - `cover`: die 4 Bilder auf der Titelseite (Fotoautomaten-Stil, werden automatisch schwarz-weiß)
 - `back1`, `back3`: großes Foto auf den Rückseiten (nur am Laptop/Desktop sichtbar, auf dem Handy wird einseitig geblättert)
 
-**Farben:** ganz oben in `css/style.css` unter `:root` (`--env` = Umschlag, `--accent` = Schrift/Buttons, `--bg` = Hintergrund).
+**Farben:** ganz oben in `css/style.css` unter `:root` (`--env` = Umschlag, `--accent` = Schrift/Buttons, `--bg` = Grundton).
+**Hintergrund:** `assets/landhaus-hintergrund.jpg` (wird gekachelt), Papierstruktur des Umschlags: `assets/papier-textur.jpg`.
 
 ## 2. Mail-Versand einrichten (Web3Forms, kostenlos)
 
